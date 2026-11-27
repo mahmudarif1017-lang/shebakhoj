@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="সেবাখোঁজ — বাংলা বা ইংরেজিতে সমস্যা লিখে প্রয়োজনীয় সেবার ধরন ও ডেমো প্রদানকারী খুঁজুন।"
+    />
+    <meta name="theme-color" content="#0f766e" />
+    <title>সেবাখোঁজ — সমস্যা বলুন, সমাধান খুঁজে দেব</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap nav-inner">
+        <a class="brand" href="#top" aria-label="সেবাখোঁজ হোমপেজ">
+          <span class="brand-mark" aria-hidden="true">◎</span>
+          <span class="brand-name">সেবাখোঁজ</span>
+        </a>
+
+        <nav class="nav-links" aria-label="প্রধান নেভিগেশন">
+          <a href="#search">খোঁজা</a>
+          <a href="#categories">সেবার ধরন</a>
+          <a href="#providers">ডেমো প্রদানকারী</a>
+          <a href="#how">কীভাবে কাজ করে</a>
+        </nav>
+
+        <span class="nav-badge">ডেমো সংস্করণ</span>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="wrap hero-inner">
+          <div class="hero-copy">
+            <p class="eyebrow">বাংলা-প্রথম সেবা খোঁজার জায়গা</p>
+            <h1 id="hero-title">সমস্যা বলুন,<br /><span>সমাধান খুঁজে দেব।</span></h1>
+            <p class="hero-lead">
+              ফ্যান নষ্ট হোক, পাইপ ফুটো হোক কিংবা ইন্টারনেট ধীর — বাংলা বা
+              ইংরেজিতে যেকোনো ভাষায় লিখলেই আমরা বিষয়টি বুঝে সেবার ধরন চিনে নেব।
+            </p>
+            <div class="hero-facts">
+              <span class="hero-fact">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7" /></svg>
+                বাংলা ও ইংরেজি দুটোই বোঝে
+              </span>
+              <span class="hero-fact">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7" /></svg>
+                ডেমো তথ্য, কোনো বাস্তব দাবি নয়
+              </span>
+            </div>
+          </div>
+
+          <div class="hero-art" aria-hidden="true">
+            <div class="art-card">
+              <div class="art-icon">
+                <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg>
+              </div>
+              <p>আপনার প্রশ্ন</p>
+              <div class="art-arrow">↓</div>
+              <div class="art-chips">
+                <span>বাংলা</span>
+                <span>ইংরেজি</span>
+                <span>AI বিশ্লেষণ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="wrap search-section" id="search">
+        <section class="search-panel" aria-labelledby="query-label">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">প্রথম ধাপ</p>
+              <h2 id="query-label">আপনার সমস্যাটি লিখুন</h2>
+            </div>
+            <span class="panel-tag">বড় করে লিখুন, ভুল হলে চলবে</span>
+          </div>
+
+          <label class="sr-only" for="query">সমস্যার বিবরণ</label>
+          <textarea
+            id="query"
+            name="query"
+            rows="5"
+            maxlength="500"
+            placeholder="উদাহরণ: বাসার ফ্যান ঘুরছে না, আবার বিদ্যুৎও কমে যাচ্ছে। দ্রুত ঠিক করতে চাই।"
+            aria-describedby="query-help"
+          ></textarea>
+
+          <div class="search-footer">
+            <p id="query-help" class="muted small">সর্বোচ্চ ৫০০ অক্ষর · Ctrl + Enter দিয়েও খোঁজা যায়</p>
+            <button id="search-btn" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg>
+              <span id="search-btn-label">সেবা খুঁজুন</span>
+            </button>
+          </div>
+          <p id="form-error" class="form-error" role="alert" hidden></p>
+
+          <div class="examples">
+            <p class="examples-label">দ্রুত চেষ্টা করুন</p>
+            <div id="example-list" class="chips"></div>
+          </div>
+        </section>
+
+        <section id="results" class="results" aria-live="polite" hidden>
+          <div class="result-top">
+            <div>
+              <p class="muted small">শনাক্ত বিভাগ</p>
+              <h3 id="result-category" class="result-category"></h3>
+            </div>
+            <span id="mode-badge" class="mode-badge"></span>
+          </div>
+
+          <p id="result-summary" class="summary"></p>
+          <p id="result-note" class="note" hidden></p>
+
+          <div class="keyword-block">
+            <p class="muted small">কাজে লাগা শব্দ</p>
+            <div id="keyword-list" class="chips"></div>
+          </div>
+
+          <h3 id="result-providers-title" class="section-title">মিলে যাওয়া ডেমো প্রদানকারী</h3>
+          <div id="provider-list" class="provider-grid"></div>
+          <p id="empty-message" class="empty-message" hidden></p>
+
+          <p class="disclaimer">
+            সতর্কতা: এখানকার সব নাম ও বিবরণ শুধুমাত্র ডেমো। এরা বাস্তব কোনো
+            ব্যক্তি বা প্রতিষ্ঠান নয়; ফোন নম্বর বা যোগাযোগের তথ্য দেওয়া হয় না।
+          </p>
+        </section>
+      </div>
+
+      <section class="section" id="categories" aria-labelledby="categories-title">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">সেবার ধরন</p>
+              <h2 id="categories-title">কী কী বিষয়ে সাহায্য পেতে পারেন?</h2>
+              <p>যেকোনো কার্ডে ক্লিক করলে খোঁজার ঘরে চলে যাবেন।</p>
+            </div>
+          </div>
+
+          <div class="category-grid">
+            <a class="category-card" href="#search">
+              <span class="category-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13H11l-1 9 8.5-11H12l1-9Z" /></svg>
+              </span>
+              <h3>বৈদ্যুতিক ও ইলেকট্রনিক</h3>
+              <p>ফ্যান, লাইট, সকেট, এসি বা ল্যাপটপের সমস্যা</p>
+              <span class="card-link">খুঁজতে যান <span aria-hidden="true">→</span></span>
+            </a>
+
+            <a class="category-card" href="#search">
+              <span class="category-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5S5.5 9.6 5.5 14a6.5 6.5 0 0 0 13 0c0-4.4-6.5-11.5-6.5-11.5Z" /></svg>
+              </span>
+              <h3>প্লাম্বিং ও পানি</h3>
+              <p>পাইপ ফুটো, নল, ট্যাপ ও বাথরুমের সমস্যা</p>
+              <span class="card-link">খুঁজতে যান <span aria-hidden="true">→</span></span>
+            </a>
+
+            <a class="category-card" href="#search">
+              <span class="category-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 8.5a15 15 0 0 1 19 0M5.5 12a10.5 10.5 0 0 1 13 0M8.5 15.5a6 6 0 0 1 7 0" /><circle cx="12" cy="19" r="1.2" /></svg>
+              </span>
+              <h3>ইন্টারনেট ও নেটওয়ার্ক</h3>
+              <p>Wi-Fi, রাউটার, কনেকশন ও ধীর স্পিড</p>
+              <span class="card-link">খুঁজতে যান <span aria-hidden="true">→</span></span>
+            </a>
+
+            <a class="category-card" href="#search">
+              <span class="category-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z" /><path d="m19 14 .8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14Z" /></svg>
+              </span>
+              <h3>পরিচ্ছন্নতা</h3>
+              <p>বাড়ি পরিষ্কার, মেঝে, ধুলো ও গভীর পরিচ্ছন্নতা</p>
+              <span class="card-link">খুঁজতে যান <span aria-hidden="true">→</span></span>
+            </a>
+
+            <a class="category-card" href="#search">
+              <span class="category-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h11a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4z" /><path d="M7 12.5V19h6v-6.5" /><path d="M17 7h2a2 2 0 0 1 2 2v8" /></svg>
+              </span>
+              <h3>পেইন্ট ও দেওয়াল</h3>
+              <p>রঙ, প্লাস্টার ও দেওয়ালের নতুন রূপ</p>
+              <span class="card-link">খুঁজতে যান <span aria-hidden="true">→</span></span>
+            </a>
+
+            <a class="category-card" href="#search">
+              <span class="category-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3l7 7-3 3-7-7 3-3Z" /><path d="M11 6 4 13l7 7 7-7" /></svg>
+              </span>
+              <h3>কাঠের কাজ</h3>
+              <p>দরজা, জানালা, ফার্নিচার ও তাকের কাজ</p>
+              <span class="card-link">খুঁজতে যান <span aria-hidden="true">→</span></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tint" id="providers" aria-labelledby="providers-title">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">ডেমো ডেটাসেট</p>
+              <h2 id="providers-title">ডেমো প্রদানকারী</h2>
+              <p>নিচের সব এন্ট্রি কাল্পনিক। বাস্তব কোনো পরিচয় বা যোগাযোগ তথ্য নেই।</p>
+            </div>
+            <span class="demo-pill">শুধু ডেমো</span>
+          </div>
+          <div id="demo-provider-list" class="demo-grid">
+            <p class="muted">ডেমো তথ্য লোড হচ্ছে…</p>
+          </div>
+          <p class="demo-footnote">
+            খোঁজার ফলাফলে আপনার বর্ণনার সাথে মিলে যাওয়া এন্ট্রিগুলো আলাদাভাবে দেখানো হয়।
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="how" aria-labelledby="how-title">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">তিন ধাপ</p>
+              <h2 id="how-title">কীভাবে কাজ করে</h2>
+              <p>লিখুন, বুঝুন, দেখুন — এতটুকুই।</p>
+            </div>
+          </div>
+
+          <ol class="steps">
+            <li class="step-card">
+              <span class="step-number">১</span>
+              <h3>সমস্যা লিখুন</h3>
+              <p>বাংলা বা ইংরেজিতে কয়েক শব্দে বলুন কী সমস্যা হয়েছে।</p>
+            </li>
+            <li class="step-card">
+              <span class="step-number">২</span>
+              <h3>বিষয়টি বোঝা হয়</h3>
+              <p>সার্ভারে Gemini API বিষয়টি শ্রেণীবদ্ধ করে মূল শব্দ বের করে।</p>
+            </li>
+            <li class="step-card">
+              <span class="step-number">৩</span>
+              <h3>ডেমো ফলাফল দেখুন</h3>
+              <p>মিলে যাওয়া কাল্পনিক প্রদানকারী ও তাদের কাজের ধরন দেখা যায়।</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <div class="footer-brand">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true">◎</span>
+            <span class="brand-name">সেবাখোঁজ</span>
+          </div>
+          <p>বাংলা-প্রথম ছোট একটি ডেমো প্রকল্প। বাস্তব সেবা বা বুকিং করা হয় না।</p>
+        </div>
+        <nav class="footer-nav" aria-label="ফুটার নেভিগেশন">
+          <p>নেভিগেশন</p>
+          <a href="#search">খোঁজা</a>
+          <a href="#categories">সেবার ধরন</a>
+          <a href="#providers">ডেমো প্রদানকারী</a>
+          <a href="#how">কীভাবে কাজ করে</a>
+        </nav>
+        <div class="footer-note">
+          <p>ডেমো সতর্কতা</p>
+          <p>সব নাম কাল্পনিক; কোনো ফোন নম্বর বা রিভিউ নেই।</p>
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        <p>© সেবাখোঁজ — প্রতিযোগিতা ও শিখনের জন্য তৈরি ডেমো।</p>
+      </div>
+    </footer>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
