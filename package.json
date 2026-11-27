@@ -1,0 +1,13 @@
+{
+  "name": "shebakhoj",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bangla-first AI service finder demo — Vercel serverless API + static frontend",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20.x"
+  }
+}

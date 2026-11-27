@@ -1,74 +1,105 @@
 # সেবাখোঁজ (ShebaKhoj)
 
 বাংলা-প্রথম, মোবাইল-বান্ধব একটি ছোট ডেমো ওয়েব অ্যাপ। ব্যবহারকারী বাংলা বা
-ইংরেজিতে সমস্যা লিখলে সার্ভার Gemini API ব্যবহার করে বিষয়টি শ্রেণীবদ্ধ করে,
-মূল শব্দ বের করে এবং ডেমো প্রদানকারীদের দেখায়।
+ইংরেজিতে সমস্যা লিখলে সার্ভার-সাইড Gemini API বিষয়টি শ্রেণীবদ্ধ করে, মূল শব্দ
+বের করে এবং ডেমো প্রদানকারীদের দেখায়।
 
 > **গুরুত্বপূর্ণ:** প্রদর্শিত সব নাম কাল্পনিক ডেমো লেবেল। এরা বাস্তব ব্যক্তি বা
 > প্রতিষ্ঠান নয়, এবং কোনো ফোন নম্বর/যোগাযোগ তথ্য দেওয়া হয় না।
 
-## প্রয়োজনীয়তা
+## আর্কিটেকচার
 
-- Node.js 18+ (পরীক্ষা করা হয়েছে Node v26-এ)
-- কোনো npm ইনস্টলেশনের প্রয়োজন নেই — অ্যাপে কোনো বাহ্যিক প্যাকেজ নেই।
+```
+public/            → স্ট্যাটিক ফ্রন্টএন্ড (Vercel সরাসরি serve করে)
+api/search.js      → Vercel serverless function: POST /api/search
+api/providers.js   → Vercel serverless function: GET /api/providers
+lib/handlers.js    → Gemini, fallback, provider matching (দুই জায়গায় একই কোড)
+providers.js       → ছোট ডেমো ডেটাসেট
+server.js          → শুধু লোকাল ডেভেলপমেন্টের জন্য HTTP সার্ভার
+```
 
-## সেটআপ
+মূল `server.listen()` সার্ভার Vercel-এ চলে না। তাই ব্যাকএন্ডকে serverless
+function-এ রূপান্তর করা হয়েছে। লোকাল `node server.js` একই handlers ব্যবহার করে,
+তাই লোকাল ও প্রোডাকশনের আচরণ একই।
 
-1. প্রকল্প ফোল্ডারে `.env` ফাইলে আপনার Gemini API key বসান:
+## লোকাল ডেভেলপমেন্ট
+
+প্রয়োজন: Node.js 18+ (Vercel-এ 20+ ব্যবহার করা হয়)। কোনো npm ইনস্টলের প্রয়োজন নেই।
+
+1. `.env` ফাইলে key বসান (এই ফাইল `.gitignore`-এ আছে):
 
    ```text
    GEMINI_API_KEY=আপনার_প্রকৃত_কী
    ```
 
-   `.env` ফাইল `.gitignore`-এ আছে, তবে কখনোই কী কমিট বা শেয়ার করবেন না।
-   key শুধু সার্ভার পড়ে; ব্রাউজারে কখনো পাঠানো হয় না।
+   অথবা shell-এ সেট করুন:
 
-   এখনই key না থাকলে অ্যাপ **ডেমো মোডে** চলবে — তখন স্থানীয় শব্দ-ভিত্তিক
-   শ্রেণীবিভাগ ব্যবহার হয় এবং ফলাফলে স্পষ্টভাবে "ডেমো মোড" দেখানো হয়।
+   ```powershell
+   $env:GEMINI_API_KEY = "আপনার_প্রকৃত_কী"
+   ```
 
-2. সার্ভার চালু করুন:
+2. চালু করুন:
 
    ```powershell
    node server.js
+   # অথবা: npm run dev
    ```
 
-3. ব্রাউজারে খুলুন: <http://127.0.0.1:3000>
+3. খুলুন: <http://127.0.0.1:3000>
 
-## ঐচ্ছিক environment variable
+Key না থাকলে অ্যাপ **ডেমো মোডে** চলে এবং ফলাফলে স্পষ্টভাবে তা দেখানো হয়।
+
+### ঐচ্ছিক environment variable
 
 | Variable | Default | কাজ |
 | --- | --- | --- |
-| `GEMINI_API_KEY` | (খালি) | Gemini API key, শুধু সার্ভারে ব্যবহৃত |
-| `GEMINI_MODEL` | `gemini-3.5-flash` | ব্যবহৃত Gemini মডেল (নতুন key-এ `gemini-2.5-flash` আর পাওয়া যায় না) |
-| `PORT` | `3000` | সার্ভার পোর্ট |
-| `HOST` | `127.0.0.1` | বাইরে থেকে অ্যাক্সেস চাইলে `0.0.0.0` |
+| `GEMINI_API_KEY` | (খালি) | Gemini key, শুধু সার্ভারে ব্যবহৃত; ব্রাউজারে যায় না |
+| `GEMINI_MODEL` | `gemini-3.5-flash` | ব্যবহৃত মডেল (নতুন key-এ `gemini-2.5-flash` পাওয়া যায় না) |
+| `PORT` | `3000` | শুধু লোকাল সার্ভারের পোর্ট |
+| `HOST` | `127.0.0.1` | শুধু লোকাল; বাইরে থেকে চাইলে `0.0.0.0` |
 
-উদাহরণ:
+## Vercel-এ deploy
 
-```powershell
-$env:PORT = "4000"
-node server.js
-```
+1. GitHub repository-তে কোড push করুন (remote ইতিমধ্যে connected)।
 
-## কীভাবে কাজ করে
+2. Vercel Dashboard → **Add New… → Project** → repository `shebakhoj` import করুন।
 
-- `GET /` — বাংলা-প্রথম UI serves করে (`public/` ফোল্ডার): হিরো, বড় খোঁজার ঘর,
-  ছটি সেবার ধরন, ডেমো প্রদানকারী, তিন ধাপ ও ফুটার নেভিগেশন।
-- `GET /api/providers` — শুধু-পড়ার রুট; ডেমো প্রদানকারী দেখাতে ব্যবহার হয়।
-- `POST /api/search` — `{ "query": "..." }` নেয়, Gemini-কে server-side করে,
-  এবং `{ category, categoryLabel, keywords, summary, providers, mode, note }`
-  ফেরত দেয়।
-- AI ব্যর্থ বা key না থাকলে সার্ভার ডেমো শ্রেণীবিভাগে ফিরে যায়; কখনো error-
-  বার্তায় key দেখায় না।
+3. বিল্ড কনফিগারেশন:
+   - **Framework Preset:** Other
+   - **Root Directory:** repository root (default)
+   - **Build Command:** খালি রাখুন
+   - **Output Directory:** default (Vercel `public/` স্বয়ংক্রিয়ভাবে serve করে)
 
-## ফাইল
+4. **Environment Variables** যোগ করুন (Project Settings → Environment Variables):
+   - `GEMINI_API_KEY` = আপনার প্রকৃত key — Production / Preview / Development যেকোনো পরিবেশে
+   - ঐচ্ছিক: `GEMINI_MODEL` = `gemini-3.5-flash`
 
-- `server.js` — HTTP সার্ভার, `.env` লোডিং, Gemini কল, fallback, matching
-- `providers.js` — ছোট, স্পষ্টভাবে লেবেল করা ডেমো ডেটাসেট
-- `public/index.html`, `public/styles.css`, `public/app.js` — ফ্রন্টএন্ড
-- `.env.example` — key-এর ফাঁকা টেমপ্লেট (কমিট করা নিরাপদ)
+   `.env` ফাইল Git-এ নেই, তাই Vercel-এ upload হয় না। প্রোডাকশনে key শুধু
+   Vercel environment variable থেকে পড়া হয়।
+
+5. **Deploy** ক্লিক করুন। Vercel স্বয়ংক্রিয়ভাবে:
+   - `public/` থেকে ফ্রন্টএন্ড serve করবে
+   - `api/search.js` ও `api/providers.js` কে Node.js serverless function বানাবে
+
+6. প্রতিটি push-এ Vercel auto-deploy করবে। Key পরিবর্তন করলে **Redeploy** করুন।
+
+### যাচাই
+
+Deploy-এর পর:
+
+- `https://<your-project>.vercel.app/` → হোমপেজ
+- `https://<your-project>.vercel.app/api/providers` → `{ "demo": true, ... }`
+- `POST https://<your-project>.vercel.app/api/search` — বডি `{ "query": "ফ্যান নষ্ট" }` সহ
+  → `.mode` হবে `ai` (key থাকলে) বা `demo` (না থাকলে)
+
+## API
+
+- `GET /api/providers` — শুধু-পড়া; কাল্পনিক ডেমো প্রদানকারী ফেরত দেয়।
+- `POST /api/search` — `{ "query": "..." }` নেয়; ফেরত দেয়
+  `{ category, categoryLabel, keywords, summary, providers, mode, note }`।
+- AI ব্যর্থ বা key না থাকলে ডেমো শ্রেণীবিভাগে ফিরে যায়; কখনো key দেখায় না।
 
 ## ডেমো সীমাবদ্ধতা
 
-কোনো বাস্তব প্রদানকারী, ফোন নম্বর বা বুকিং সিস্টেম নেই। এটি শিখন/প্রতিযোগিতার
-নমুনা মাত্র; প্রয়োজন হলে পরে বাস্তব ডেটাসেট ও যাচাইকৃত তথ্য যোগ করা যাবে।
+কোনো বাস্তব প্রদানকারী, ফোন নম্বর, রিভিউ বা বুকিং সিস্টেম নেই। এটি শিখন/
+প্রতিযোগিতার নমুনা মাত্র।
